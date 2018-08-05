@@ -16,8 +16,18 @@
  * Tested up to: 4.9.8
  */
  
- defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
- require_once('osen-php-mpesa.php);
+defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
+define( 'POTPESA_DIR', plugin_dir_path( __FILE__ ) );
+
+require_once( POTPESA_DIR.'/osen-php-mpesa.php' );
+
+require_once( POTPESA_DIR.'/settings.php' );
+
+require_once( POTPESA_DIR.'/payments.php' );
+
+require_once( POTPESA_DIR.'/metaboxes.php' );
+
+require_once( POTPESA_DIR.'/analytics.php' );
 
  function get_post_id_by_meta_key_and_value($key, $value) {
     global $wpdb;
