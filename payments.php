@@ -1,5 +1,12 @@
+<?php
+/**
+ * @package Potpesa
+ * @subpackage Main Plugin File
+ * @author Mauko Maunde <mauko@ose.co.ke>, Brightone Mwasaru <bmwasaru@gmail.com>, Johnes Mecha <jmecha09@gmail.com>
+ * @version 1.8
+ */
 
-// Register Custom Post Type
+// Register Pot Payment Post Type
 function potpesa_payment() {
 
 	$labels = array(
