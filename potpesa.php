@@ -4,7 +4,7 @@
  * @subpackage Main Plugin File
  * @author Mauko Maunde <mauko@ose.co.ke>, Brightone Mwasaru <bmwasaru@gmail.com>, Johnes Mecha <jmecha09@gmail.com>
  * @version 1.8
- 
+ *
  * Plugin Name: Potpesa
  * Plugin URI: https://swahilipothub.co.ke/
  * Description: This plugin extends WordPress functionality to integrate MPesa for making and receiving online payments.
@@ -17,7 +17,8 @@
  */
  
  defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
- 
+ require_once('osen-php-mpesa.php);
+
  function get_post_id_by_meta_key_and_value($key, $value) {
     global $wpdb;
     $meta = $wpdb->get_results("SELECT * FROM `".$wpdb->postmeta."` WHERE meta_key='".$key."' AND meta_value='".$value."'");
