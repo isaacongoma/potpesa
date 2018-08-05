@@ -28,4 +28,4 @@ The payments received are listed on a page in the admin dashboard.
 You are free to contribute to changes to the code and make a pull request and we will merge.
 
 ## Licensing
-This code is released under the MIT license. See LICENSE
+This code is released under the MIT license. See <a href="https://github.com/bmwasaru/potpesa/blob/master/LICENSE">LICENSE</a>
