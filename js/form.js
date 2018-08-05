@@ -4,7 +4,7 @@ $('potpesa-form').submit(){
   var form = this;
 
   $.post( form.serialize(), form.attr('action'), data ){
-    if( data['errorMessage] ){
+    if( data['errorMessage'] ){
        var response = "Error "+ data['errorMessage']+": "+ data['errorMessage']+".";
     } else {
        var response = "";
