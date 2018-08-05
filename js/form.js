@@ -1,5 +1,5 @@
 $('potpesa-form').submit(){
-  $('loading-animation).show();
+  $('loading-animation').show();
 
   var form = this;
 
@@ -10,7 +10,7 @@ $('potpesa-form').submit(){
        var response = "";
     }
        
-    $('loading-animation).hide();
+    $('loading-animation').hide();
     $('response-data').html('response');
   };
 }
