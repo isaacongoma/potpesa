@@ -4,8 +4,7 @@
  */
 /* Setup CORS */
 header('Access-Control-Allow-Origin: *');
-header("Access-Control-Allow-Headers: X-API-KEY, Origin, X-Requested-With, Content-Type, Accept, Access-Control-Request-Method, Authorization");
-header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
+
 /**
  * 
  */
@@ -18,18 +17,21 @@ class MpesaSTK
   public static $validate;
   public static $confirm;
   public static $reconcile;
+
   function set( $config )
   {
     foreach ( $config as $key => $value ) {
       self::$$key = $value;
     }
   }
+
   /**
    * 
    */
   function token()
   {
       $endpoint = ( self::$env == 'live' ) ? 'https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials' : 'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials';
+
       $credentials = base64_encode( self::$appkey.':'.self::$appsecret );
       $curl = curl_init();
       curl_setopt( $curl, CURLOPT_URL, $endpoint );
@@ -44,57 +46,55 @@ class MpesaSTK
   /**
    * 
    */
-  function validate( $callback )
+  function validate( $callback, $data )
   {
-      $data = file_get_contents('php://input');
-      if( is_null( $callback) ){
+    if( is_null( $callback) ){
+      return array( 
+        'ResponseCode'            => 0, 
+        'ResponseDesc'            => 'Success',
+        'ThirdPartyTransID'       => $transID
+       );
+    } else {
+        if ( !call_user_func_array( $callback, array( $data ) ) ) {
+          return array( 
+            'ResponseCode'        => 1, 
+            'ResponseDesc'        => 'Failed',
+            'ThirdPartyTransID'   => $transID
+           );
+        } else {
           return array( 
             'ResponseCode'            => 0, 
             'ResponseDesc'            => 'Success',
             'ThirdPartyTransID'       => $transID
            );
-      } else {
-          if ( !call_user_func_array( $callback, array( json_decode( $data, true)['Body'] ) ) ) {
-              return array( 
-                'ResponseCode'        => 1, 
-                'ResponseDesc'        => 'Failed',
-                'ThirdPartyTransID'   => $transID
-               );
-          } else {
-          return array( 
-            'ResponseCode'            => 0, 
-            'ResponseDesc'            => 'Success',
-            'ThirdPartyTransID'       => $transID
-           );
-          }
-      }
+        }
+    }
   }
   /**
    * 
    */
-  function confirm( $callback )
+  function confirm( $callback, $data )
   {
-    $data = file_get_contents('php://input');
     if( is_null( $callback) ){
-        return array( 
-          'ResponseCode'            => 0, 
-          'ResponseDesc'            => 'Success',
-          'ThirdPartyTransID'       => $transID
-         );
+      return array( 
+        'ResponseCode'            => 0, 
+        'ResponseDesc'            => 'Success',
+        'ThirdPartyTransID'       => $transID
+       );
     } else {
-        if ( !call_user_func_array( $callback, array( json_decode( $data, true)['Body'] ) ) ) {
-            return array( 
-              'ResponseCode'        => 1, 
-              'ResponseDesc'        => 'Failed',
-              'ThirdPartyTransID'   => $transID
-             );
-        } else {
-        return array( 
-          'ResponseCode'            => 0, 
-          'ResponseDesc'            => 'Success',
-          'ThirdPartyTransID'       => $transID
-         );
-        }
+      if ( !call_user_func_array( $callback, array( $data ) ) ) {
+          return array( 
+            'ResponseCode'        => 1, 
+            'ResponseDesc'        => 'Failed',
+            'ThirdPartyTransID'   => $transID
+           );
+      } else {
+      return array( 
+        'ResponseCode'            => 0, 
+        'ResponseDesc'            => 'Success',
+        'ThirdPartyTransID'       => $transID
+       );
+      }
     }
   }
   /**
@@ -132,22 +132,26 @@ class MpesaSTK
     curl_setopt( $curl, CURLOPT_POSTFIELDS, $data_string );
     curl_setopt( $curl, CURLOPT_HEADER, false );
     $requested = curl_exec( $curl );
+
     return json_decode( $requested, true );
   }
+  
   /**
    * 
    */          
-  function reconcile( $callback )
+  function reconcile( $callback, $data )
   {
-    $response = json_decode( file_get_contents( 'php://input' ), true );
+    $response = is_null( $data ) ? json_decode( file_get_contents( 'php://input' ), true ) : $data;
     if( !isset( $response['Body'] ) ){
       return false;
     }
+
     $payment = $response['Body'];
     if( !isset($payment['CallbackMetadata'])){
       $data = null;
       return false;
     }
+
     $data = array(
       'receipt' => $payment['CallbackMetadata']['Item'][1]['Value'],
       'amount' => $payment['CallbackMetadata']['Item'][0]['Value']
@@ -158,10 +162,11 @@ class MpesaSTK
       return call_user_func_array( $callback, $data );
     }
   }
+
   /**
    * 
    */
-  function stk_register()
+  function register()
   {
     $protocol = ( ( !empty( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] != 'off' ) || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
     $endpoint = ( self::$env == 'live' ) ? 'https://api.safaricom.co.ke/mpesa/c2b/v1/registerurl' : 'https://sandbox.safaricom.co.ke/mpesa/c2b/v1/registerurl';
@@ -183,6 +188,7 @@ class MpesaSTK
     return json_decode( curl_exec( $curl ), true );
   }
 }
+
 ### WRAPPER FUNCTIONS
 /**
  * Wrapper function to process response data for reconcilliation
@@ -197,7 +203,7 @@ class MpesaSTK
  *  reconcile   |   string  | Reconciliation URI    | lipia/reconcile
  * @return bool
  */ 
-function stk_config( $configuration )
+function stk_config( $configuration = array() )
 {
   MpesaSTK::set( $configuration );
 }
@@ -206,19 +212,21 @@ function stk_config( $configuration )
  * @param String $callback - Optional callback function to process the response
  * @return bool
  */ 
-function stk_validate( $callback = null )
+function stk_validate( $callback = null, $data = null )
 {
-  return MpesaSTK::validate( $callback );
+  return MpesaSTK::validate( $callback, $data );
 }
+
 /**
  * Wrapper function to process response data for confirmation
  * @param String $callback - Optional callback function to process the response
  * @return bool
  */ 
-function stk_confirm( $callback = null )
+function stk_confirm( $callback = null, $data = null  )
 {
-  return MpesaSTK::confirm( $callback );
+  return MpesaSTK::confirm( $callback, $data );
 }
+
 /**
  * Wrapper function to process request for payment
  * @param String $phone     - Phone Number to send STK Prompt Request to
@@ -226,12 +234,13 @@ function stk_confirm( $callback = null )
  * @param String $reference - Account to show in STK Prompt
  * @param String $trxdesc   - Transaction Description(optional)
  * @param String $remark    - Remarks about transaction(optional)
- * @return bool
+ * @return array
  */ 
 function stk_request( $phone, $amount, $reference, $trxdesc = 'Mpesa Payment', $remark = ' Mpesa Payment' )
 {
   return MpesaSTK::request( $phone, $amount, $reference, $trxdesc, $remark );
 }
+
 /**
  * Wrapper function to process response data for reconcilliation
  * @param String $callback - Optional callback function to process the response
@@ -241,6 +250,7 @@ function stk_reconcile( $callback = null )
 {
   return MpesaSTK::reconcile( $callback );
 }
+
 /**
  * Wrapper function to register URLs
  */
