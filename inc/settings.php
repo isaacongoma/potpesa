@@ -1,319 +1,219 @@
 <?php
-add_action( 'admin_init', 'mc_settings_init' );
-function mc_settings_init() {
-    register_setting( 'mc', 'mc_options' );
-    
-    add_settings_section( 'mc_section_general', __( 'General Configuration.', 'mc' ), 'mc_section_general_cb', 'mc' );
-    add_settings_section( 'mc_section_mpesa', __( 'MPesa Configuration.', 'mc' ), 'mc_section_mc_mpesa_cb', 'mc' );
-    add_settings_field(
-        'mc_conf_env',
-        __( 'Environment', 'mc' ),
-        'mc_fields_env_cb',
-        'mc',
-        'mc_section_general',
-        [
-        'label_for' => 'mc_conf_env',
-        'class' => 'mc_row',
-        'mc_custom_data' => 'custom',
-        ]
-    );
-    add_settings_field(
-        'mc_conf_name',
-        __( 'Business Name', 'mc' ),
-        'mc_fields_name_cb',
-        'mc',
-        'mc_section_general',
-        [
-        'label_for' => 'mc_conf_name',
-        'class' => 'mc_row',
-        'mc_custom_data' => 'custom',
-        ]
-    );
-    
-    add_settings_field(
-        'mc_conf_type',
-        __( 'Identifier Type', 'mc' ),
-        'mc_fields_mc_mpesa_cb',
-        'mc',
-        'mc_section_mpesa',
-        [
-        'label_for' => 'mc_conf_type',
-        'class' => 'mc_row',
-        'mc_custom_data' => 'custom',
-        ]
-    );
-    
-    add_settings_field(
-        'mc_conf_shortcode',
-        __( 'Mpesa Shortcode', 'mc' ),
-        'mc_fields_mc_mpesa_shortcode_cb',
-        'mc',
-        'mc_section_mpesa',
-        [
-        'label_for' => 'mc_conf_shortcode',
-        'class' => 'mc_row',
-        'mc_custom_data' => 'custom',
-        ]
-    );
-    add_settings_field(
-        'mc_conf_username',
-        __( 'MPesa Portal Username', 'mc' ),
-        'mc_fields_mc_mpesa_pu_cb',
-        'mc',
-        'mc_section_mpesa',
-        [
-        'label_for' => 'mc_env_name',
-        'class' => 'mc_row',
-        'mc_custom_data' => 'custom',
-        ]
-    );
-    add_settings_field(
-        'mc_conf_password',
-        __( 'MPesa Portal Password', 'mc' ),
-        'mc_fields_mc_mpesa_pp_cb',
-        'mc',
-        'mc_section_mpesa',
-        [
-        'label_for' => 'mc_conf_password',
-        'class' => 'mc_row',
-        'mc_custom_data' => 'custom',
-        ]
-    );
-    
-    add_settings_field(
-        'mc_conf_key',
-        __( 'App Consumer Key', 'mc' ),
-        'mc_fields_mc_mpesa_ck_cb',
-        'mc',
-        'mc_section_mpesa',
-        [
-        'label_for' => 'mc_conf_key',
-        'class' => 'mc_row',
-        'mc_custom_data' => 'custom',
-        ]
-    );
-    add_settings_field(
-        'mc_conf_secret',
-        __( 'App Consumer Secret', 'mc' ),
-        'mc_fields_mc_mpesa_cs_cb',
-        'mc',
-        'mc_section_mpesa',
-        [
-        'label_for' => 'mc_conf_secret',
-        'class' => 'mc_row',
-        'mc_custom_data' => 'custom',
-        ]
-    );
-    
-    add_settings_field(
-        'mc_conf_passkey',
-        __( 'Online Passkey', 'mc' ),
-        'mc_fields_mc_mpesa_pk_cb',
-        'mc',
-        'mc_section_mpesa',
-        [
-        'label_for' => 'mc_conf_passkey',
-        'class' => 'mc_row',
-        'mc_custom_data' => 'custom',
-        ]
-    );
-    
-    add_settings_field(
-        'mc_conf_credentials',
-        __( 'Security Credentials', 'mc' ),
-        'mc_fields_mc_mpesa_sc_cb',
-        'mc',
-        'mc_section_mpesa',
-        [
-        'label_for' => 'mc_conf_credentials',
-        'class' => 'mc_row',
-        'mc_custom_data' => 'custom',
-        ]
-    );
-    
-    add_settings_field(
-        'mc_mpesa_conf_msg',
-        __( 'Message', 'mc' ),
-        'mc_fields_mc_mpesa_msg_cb',
-        'mc',
-        'mc_section_mpesa',
-        [
-        'label_for' => 'mc_mpesa_conf_msg',
-        'class' => 'mc_row',
-        'mc_custom_data' => 'custom',
-        ]
-    );
+/**
+ * @link              https://mauko.co.ke
+ * @since             1.0.0
+ * @package           mpesa_donations
+ */
+
+add_action('admin_menu', 'potpesa_options_page');
+function potpesa_options_page()
+{
+  add_menu_page(
+    'Configure Potpesa',
+    'Configure Potpesa',
+    'manage_options',
+    'potpesa',
+    'potpesa_options_page_html',
+    'dashicons-smiley',
+    20
+  );
 }
- 
-function mc_section_general_cb( $args ) {
-    ?>
-    <p id="<?php echo esc_attr( $args['id'] ); ?>-config"><?php esc_html_e( 'After configuring everything, create a post or page and use the following shortcode to render the form: ', 'mc' ); ?><code>[MCFORM]</code></p>
-    <?php
+add_action( 'admin_init', 'potpesa_settings_init' );
+function potpesa_settings_init() {
+    register_setting( 'potpesa', 'potpesa_options' );
+    
+    add_settings_section( 'potpesa_section_mpesa', __( 'MPesa Settings Configuration.', 'potpesa' ), 'potpesa_section_potpesa_mpesa_cb', 'potpesa' );
+
+    add_settings_field(
+        'env',
+        __( 'Environment', 'potpesa' ),
+        'potpesa_fields_env_cb',
+        'potpesa',
+        'potpesa_section_mpesa',
+        [
+        'label_for' => 'env',
+        'class' => 'potpesa_row',
+        'potpesa_custom_data' => 'custom',
+        ]
+    );
+    
+    add_settings_field(
+        'type',
+        __( 'Identifier Type', 'potpesa' ),
+        'potpesa_fields_potpesa_mpesa_cb',
+        'potpesa',
+        'potpesa_section_mpesa',
+        [
+        'label_for' => 'type',
+        'class' => 'potpesa_row',
+        'potpesa_custom_data' => 'custom',
+        ]
+    );
+    
+    add_settings_field(
+        'shortcode',
+        __( 'Mpesa Shortcode', 'potpesa' ),
+        'potpesa_fields_potpesa_mpesa_shortcode_cb',
+        'potpesa',
+        'potpesa_section_mpesa',
+        [
+        'label_for' => 'shortcode',
+        'class' => 'potpesa_row',
+        'potpesa_custom_data' => 'custom',
+        ]
+    );
+    
+    add_settings_field(
+        'appkey',
+        __( 'App Consumer Key', 'potpesa' ),
+        'potpesa_fields_potpesa_mpesa_ck_cb',
+        'potpesa',
+        'potpesa_section_mpesa',
+        [
+        'label_for' => 'appkey',
+        'class' => 'potpesa_row',
+        'potpesa_custom_data' => 'custom',
+        ]
+    );
+
+    add_settings_field(
+        'appsecret',
+        __( 'App Consumer Secret', 'potpesa' ),
+        'potpesa_fields_potpesa_mpesa_cs_cb',
+        'potpesa',
+        'potpesa_section_mpesa',
+        [
+        'label_for' => 'appsecret',
+        'class' => 'potpesa_row',
+        'potpesa_custom_data' => 'custom',
+        ]
+    );
+    
+    add_settings_field(
+        'passkey',
+        __( 'Online Passkey', 'potpesa' ),
+        'potpesa_fields_potpesa_mpesa_pk_cb',
+        'potpesa',
+        'potpesa_section_mpesa',
+        [
+        'label_for' => 'passkey',
+        'class' => 'potpesa_row',
+        'potpesa_custom_data' => 'custom',
+        ]
+    );
+    
 }
-function mc_section_mc_mpesa_cb( $args ) {
-    $options = get_option( 'mc_options', ['mc_conf_env'=>'sandbox'] );
-    ?>
+
+function potpesa_section_potpesa_mpesa_cb( $args ) {
+    $options = get_option( 'potpesa_options', ['env'=>'sandbox'] ); ?>
     <p id="<?php echo esc_attr( $args['id'] ); ?>">
         <h4 style="color: red;">IMPORTANT!</h4><li>Please <a href="https://developer.safaricom.co.ke/" target="_blank" >create an app on Daraja</a> if you haven't. Fill in the app's consumer key and secret below.</li><li>For security purposes, and for the MPesa Instant Payment Notification to work, ensure your site is running over https(SSL).</li>
         <li>You can <a href="https://developer.safaricom.co.ke/test_credentials" target="_blank" >generate sandbox test credentials here</a>.</li>
-        <li>Click here to <a href="<?php echo home_url( '/?mpesa_ipn_register='.esc_attr( $options['mc_conf_env'] ) ); ?>" target="_blank">register confirmation & validation URLs for <?php echo esc_attr( $options['mc_conf_env'] ); ?> </a></li>
+        <li>Click here to <a href="<?php echo home_url( '/?mpesa_ipn_register='.esc_attr( $options['env'] ) ); ?>" target="_blank">register confirmation & validation URLs for <?php echo esc_attr( $options['env'] ); ?> </a></li>
     </p>
+    <p id="<?php echo esc_attr( $args['id'] ); ?>-config"><?php esc_html_e( 'After configuring everything, create a post or page and use the following shortcode to render the form: ', 'potpesa' ); ?><code>[POTPAYER]</code></p>
     <?php
 }
-function mc_fields_env_cb( $args ) {
-    $options = get_option( 'mc_options' );
+
+function potpesa_fields_env_cb( $args ) {
+    $options = get_option( 'potpesa_options' );
     ?>
     <select id="<?php echo esc_attr( $args['label_for'] ); ?>"
-    data-custom="<?php echo esc_attr( $args['mc_custom_data'] ); ?>"
-    name="mc_options[<?php echo esc_attr( $args['label_for'] ); ?>]"
+    data-custom="<?php echo esc_attr( $args['potpesa_custom_data'] ); ?>"
+    name="potpesa_options[<?php echo esc_attr( $args['label_for'] ); ?>]"
     >
-        <option value="live" <?php echo isset( $options[ $args['label_for'] ] ) ? ( selected( $options[ $args['label_for'] ], 'live', false ) ) : ( '' ); ?>>
-        <?php esc_html_e( 'Live', 'mc' ); ?>
-        </option>
         <option value="sandbox" <?php echo isset( $options[ $args['label_for'] ] ) ? ( selected( $options[ $args['label_for'] ], 'sandbox', false ) ) : ( '' ); ?>>
-        <?php esc_html_e( 'Sandbox', 'mc' ); ?>
+        <?php esc_html_e( 'Sandbox', 'potpesa' ); ?>
+        </option>
+        <option value="live" <?php echo isset( $options[ $args['label_for'] ] ) ? ( selected( $options[ $args['label_for'] ], 'live', false ) ) : ( '' ); ?>>
+        <?php esc_html_e( 'Live', 'potpesa' ); ?>
         </option>
     </select>
     <p class="description">
-    <?php esc_html_e( 'Environment', 'mc' ); ?>
+    <?php esc_html_e( 'Environment', 'potpesa' ); ?>
     </p>
     <?php
 }
-function mc_fields_name_cb( $args ) {
-    $options = get_option( 'mc_options' );
+
+function potpesa_fields_potpesa_mpesa_shortcode_cb( $args ) {
+    $options = get_option( 'potpesa_options' );
     ?>
     <input type="text" id="<?php echo esc_attr( $args['label_for'] ); ?>"
-    data-custom="<?php echo esc_attr( $args['mc_custom_data'] ); ?>"
-    name="mc_options[<?php echo esc_attr( $args['label_for'] ); ?>]"
+    data-custom="<?php echo esc_attr( $args['potpesa_custom_data'] ); ?>"
+    name="potpesa_options[<?php echo esc_attr( $args['label_for'] ); ?>]"
     value="<?php echo esc_attr( isset( $options[ $args['label_for'] ] ) ? $options[ $args['label_for'] ] : '' ); ?>"
     class="regular-text"
     >
     <p class="description">
-    <?php esc_html_e( 'Business name as registered with Safaricom MPesa', 'mc' ); ?>
+    <?php esc_html_e( 'Paybill/Till or phone number', 'potpesa' ); ?>
     </p>
     <?php
 }
-function mc_fields_mc_mpesa_shortcode_cb( $args ) {
-    $options = get_option( 'mc_options' );
-    ?>
-    <input type="text" id="<?php echo esc_attr( $args['label_for'] ); ?>"
-    data-custom="<?php echo esc_attr( $args['mc_custom_data'] ); ?>"
-    name="mc_options[<?php echo esc_attr( $args['label_for'] ); ?>]"
-    value="<?php echo esc_attr( isset( $options[ $args['label_for'] ] ) ? $options[ $args['label_for'] ] : '' ); ?>"
-    class="regular-text"
-    >
-    <p class="description">
-    <?php esc_html_e( 'Paybill/Till or phone number', 'mc' ); ?>
-    </p>
-    <?php
-}
-function mc_fields_mc_mpesa_cb( $args ) {
-    $options = get_option( 'mc_options' );
+
+function potpesa_fields_potpesa_mpesa_cb( $args ) {
+    $options = get_option( 'potpesa_options' );
     ?>
     <select id="<?php echo esc_attr( $args['label_for'] ); ?>"
-    data-custom="<?php echo esc_attr( $args['mc_custom_data'] ); ?>"
-    name="mc_options[<?php echo esc_attr( $args['label_for'] ); ?>]"
+    data-custom="<?php echo esc_attr( $args['potpesa_custom_data'] ); ?>"
+    name="potpesa_options[<?php echo esc_attr( $args['label_for'] ); ?>]"
     >
     <option value="1" <?php echo isset( $options[ $args['label_for'] ] ) ? ( selected( $options[ $args['label_for'] ], '1', false ) ) : ( '' ); ?>>
-    <?php esc_html_e( 'MSISDN', 'mc' ); ?>
+    <?php esc_html_e( 'MSISDN', 'potpesa' ); ?>
     </option>
     <option value="2" <?php echo isset( $options[ $args['label_for'] ] ) ? ( selected( $options[ $args['label_for'] ], '2', false ) ) : ( '' ); ?>>
-    <?php esc_html_e( 'Till Number', 'mc' ); ?>
+    <?php esc_html_e( 'Till Number', 'potpesa' ); ?>
     </option>
     <option value="4" <?php echo isset( $options[ $args['label_for'] ] ) ? ( selected( $options[ $args['label_for'] ], '4', false ) ) : ( '' ); ?>>
-    <?php esc_html_e( 'Shortcode', 'mc' ); ?>
+    <?php esc_html_e( 'Shortcode', 'potpesa' ); ?>
     </option>
     </select>
     <p class="description">
-    <?php esc_html_e( 'Business identifier type', 'mc' ); ?>
+    <?php esc_html_e( 'Business identifier type', 'potpesa' ); ?>
     </p>
     <?php
 }
-function mc_fields_mc_mpesa_ck_cb( $args ) {
-    $options = get_option( 'mc_options' );
+
+function potpesa_fields_potpesa_mpesa_ck_cb( $args ) {
+    $options = get_option( 'potpesa_options' );
     ?>
     <input type="text" id="<?php echo esc_attr( $args['label_for'] ); ?>"
-    data-custom="<?php echo esc_attr( $args['mc_custom_data'] ); ?>"
-    name="mc_options[<?php echo esc_attr( $args['label_for'] ); ?>]"
+    data-custom="<?php echo esc_attr( $args['potpesa_custom_data'] ); ?>"
+    name="potpesa_options[<?php echo esc_attr( $args['label_for'] ); ?>]"
     value="<?php echo esc_attr( isset( $options[ $args['label_for'] ] ) ? $options[ $args['label_for'] ] : '' ); ?>"
     class="regular-text"
     >
     <p class="description">
-    <?php esc_html_e( 'Daraja application consumer key.', 'mc' ); ?>
+    <?php esc_html_e( 'Daraja application consumer key.', 'potpesa' ); ?>
     </p>
     <?php
 }
-function mc_fields_mc_mpesa_pu_cb( $args ) {
-    $options = get_option( 'mc_options' );
+
+function potpesa_fields_potpesa_mpesa_cs_cb( $args ) {
+    $options = get_option( 'potpesa_options' );
     ?>
     <input type="text" id="<?php echo esc_attr( $args['label_for'] ); ?>"
-    data-custom="<?php echo esc_attr( $args['mc_custom_data'] ); ?>"
-    name="mc_options[<?php echo esc_attr( $args['label_for'] ); ?>]"
+    data-custom="<?php echo esc_attr( $args['potpesa_custom_data'] ); ?>"
+    name="potpesa_options[<?php echo esc_attr( $args['label_for'] ); ?>]"
     value="<?php echo esc_attr( isset( $options[ $args['label_for'] ] ) ? $options[ $args['label_for'] ] : '' ); ?>"
     class="regular-text"
     >
     <p class="description">
-    <?php esc_html_e( 'MPesa portal username.', 'mc' ); ?>
+    <?php esc_html_e( 'Daraja application consumer secret', 'potpesa' ); ?>
     </p>
     <?php
 }
-function mc_fields_mc_mpesa_pp_cb( $args ) {
-    $options = get_option( 'mc_options' );
-    ?>
-    <input type="text" id="<?php echo esc_attr( $args['label_for'] ); ?>"
-    data-custom="<?php echo esc_attr( $args['mc_custom_data'] ); ?>"
-    name="mc_options[<?php echo esc_attr( $args['label_for'] ); ?>]"
-    value="<?php echo esc_attr( isset( $options[ $args['label_for'] ] ) ? $options[ $args['label_for'] ] : '' ); ?>"
-    class="regular-text"
-    >
-    <p class="description">
-    <?php esc_html_e( 'MPesa portal user password.', 'mc' ); ?>
-    </p>
-    <?php
-}
-function mc_fields_mc_mpesa_cs_cb( $args ) {
-    $options = get_option( 'mc_options' );
-    ?>
-    <input type="text" id="<?php echo esc_attr( $args['label_for'] ); ?>"
-    data-custom="<?php echo esc_attr( $args['mc_custom_data'] ); ?>"
-    name="mc_options[<?php echo esc_attr( $args['label_for'] ); ?>]"
-    value="<?php echo esc_attr( isset( $options[ $args['label_for'] ] ) ? $options[ $args['label_for'] ] : '' ); ?>"
-    class="regular-text"
-    >
-    <p class="description">
-    <?php esc_html_e( 'Daraja application consumer secret', 'mc' ); ?>
-    </p>
-    <?php
-}
-function mc_fields_mc_mpesa_pk_cb( $args ) {
-    $options = get_option( 'mc_options' );
+
+function potpesa_fields_potpesa_mpesa_pk_cb( $args ) {
+    $options = get_option( 'potpesa_options' );
     ?>
     <textarea id="<?php echo esc_attr( $args['label_for'] ); ?>" 
-        name='mc_options[<?php echo esc_attr( $args['label_for'] ); ?>]' 
-        rows='2' 
+        name='potpesa_options[<?php echo esc_attr( $args['label_for'] ); ?>]' 
+        rows='1' 
         cols='50' 
         type='textarea'
         class="large-text code"><?php echo esc_attr( isset( $options[ $args['label_for'] ] ) ? $options[ $args['label_for'] ] : '' ); ?></textarea>
     <p class="description">
-    <?php esc_html_e( 'Online Pass Key', 'mc' ); ?>
-    </p>
-    <?php
-}
-function mc_fields_mc_mpesa_sc_cb( $args ) {
-    $options = get_option( 'mc_options' );
-    ?>
-    <textarea id="<?php echo esc_attr( $args['label_for'] ); ?>" name='mc_options[<?php echo esc_attr( $args['label_for'] ); ?>]' rows='3' cols='50' type='textarea' class="large-text code"><?php echo esc_attr( isset( $options[ $args['label_for'] ] ) ? $options[ $args['label_for'] ] : '' ); ?></textarea>
-    <p class="description">
-    <?php esc_html_e( 'Security Credentials', 'mc' ); ?>
-    </p>
-    <?php
-}
-function mc_fields_mc_mpesa_msg_cb( $args ) {
-    $options = get_option( 'mc_options' );
-    ?>
-    <textarea id="<?php echo esc_attr( $args['label_for'] ); ?>" name='mc_options[<?php echo esc_attr( $args['label_for'] ); ?>]' rows='3' cols='50' type='textarea' class="large-text code"><?php echo esc_attr( isset( $options[ $args['label_for'] ] ) ? $options[ $args['label_for'] ] : 'Thank you for your contribution.' ); ?></textarea>
-    <p class="description">
-    <?php esc_html_e( 'After Contribution Message', 'mc' ); ?>
+    <?php esc_html_e( 'Online Pass Key', 'potpesa' ); ?>
     </p>
     <?php
 }
@@ -322,7 +222,7 @@ function mc_fields_mc_mpesa_msg_cb( $args ) {
  * top level menu:
  * callback functions
  */
-function mc_options_page_html() {
+function potpesa_options_page_html() {
     // check user capabilities
     if ( ! current_user_can( 'manage_options' ) ) {
     return;
@@ -334,23 +234,23 @@ function mc_options_page_html() {
     // wordpress will add the "settings-updated" $_GET parameter to the url
     if ( isset( $_GET['settings-updated'] ) ) {
     // add settings saved message with the class of "updated"
-    add_settings_error( 'mc_messages', 'mc_message', __( 'My Changa Settings Updated', 'mc' ), 'updated' );
+    add_settings_error( 'potpesa_messages', 'potpesa_message', __( 'Potpesa Settings Updated', 'potpesa' ), 'updated' );
     }
     
     // show error/update messages
-    settings_errors( 'mc_messages' );
+    settings_errors( 'potpesa_messages' );
     ?>
     <div class="wrap">
         <h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
         <form action="options.php" method="post">
             <?php
-            // output security fields for the registered setting "mc"
-            settings_fields( 'mc' );
+            // output security fields for the registered setting "potpesa"
+            settings_fields( 'potpesa' );
             // output setting sections and their fields
-            // (sections are registered for "mc", each field is registered to a specific section)
-            do_settings_sections( 'mc' );
+            // (sections are registered for "potpesa", each field is registered to a specific section)
+            do_settings_sections( 'potpesa' );
             // output save settings button
-            submit_button( 'Save My Changa Settings' );
+            submit_button( 'Save Potpesa Settings' );
             ?>
         </form>
     </div>

@@ -12,13 +12,16 @@ class MpesaSTK
 {
   public static $env = 'sandbox';
   public static $parent;
+  public static $appkey;
+  public static $appsecret;
+  public static $passkey;
   public static $shortcode;
   public static $type = 4;
   public static $validate;
   public static $confirm;
   public static $reconcile;
 
-  function set( $config )
+  public static function set( $config )
   {
     foreach ( $config as $key => $value ) {
       self::$$key = $value;
@@ -28,7 +31,7 @@ class MpesaSTK
   /**
    * 
    */
-  function token()
+  public static function token()
   {
       $endpoint = ( self::$env == 'live' ) ? 'https://api.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials' : 'https://sandbox.safaricom.co.ke/oauth/v1/generate?grant_type=client_credentials';
 
@@ -43,10 +46,11 @@ class MpesaSTK
       
       return json_decode( $curl_response )->access_token;
   }
+
   /**
    * 
    */
-  function validate( $callback, $data )
+  public static function validate( $callback, $data )
   {
     if( is_null( $callback) ){
       return array( 
@@ -70,10 +74,11 @@ class MpesaSTK
         }
     }
   }
+
   /**
    * 
    */
-  function confirm( $callback, $data )
+  public static function confirm( $callback, $data )
   {
     if( is_null( $callback) ){
       return array( 
@@ -97,10 +102,11 @@ class MpesaSTK
       }
     }
   }
+
   /**
    * 
    */
-  function request( $phone, $amount, $reference, $trxdesc, $remark )
+  public static function request( $phone, $amount, $reference, $trxdesc, $remark )
   {
     $protocol = ( ( !empty( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] != 'off' ) || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
     $phone      = str_replace( "+", "", $phone );
@@ -135,11 +141,11 @@ class MpesaSTK
 
     return json_decode( $requested, true );
   }
-  
+
   /**
    * 
    */          
-  function reconcile( $callback, $data )
+  public static function reconcile( $callback, $data )
   {
     $response = is_null( $data ) ? json_decode( file_get_contents( 'php://input' ), true ) : $data;
     if( !isset( $response['Body'] ) ){
@@ -166,7 +172,7 @@ class MpesaSTK
   /**
    * 
    */
-  function register()
+  public static function register()
   {
     $protocol = ( ( !empty( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] != 'off' ) || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
     $endpoint = ( self::$env == 'live' ) ? 'https://api.safaricom.co.ke/mpesa/c2b/v1/registerurl' : 'https://sandbox.safaricom.co.ke/mpesa/c2b/v1/registerurl';
@@ -205,7 +211,7 @@ class MpesaSTK
  */ 
 function stk_config( $configuration = array() )
 {
-  MpesaSTK::set( $configuration );
+  return MpesaSTK::set( $configuration );
 }
 /**
  * Wrapper function to process response data for validation
