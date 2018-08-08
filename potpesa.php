@@ -116,23 +116,23 @@ function potpesa_form_callback( $atts = array(), $content = null ) {
   </form>';
 }
 
-add_action( 'wp_ajax_process_mc_form', 'process_mc_form' );
-add_action( 'wp_ajax_nopriv_process_mc_form', 'process_mc_form' );
-function process_mc_form() {
-  $mconfig = get_option( 'mc_options' );
-  if ( ! isset( $_POST['mc_form_nonce'] ) || ! wp_verify_nonce( $_POST['mc_form_nonce'], 'process_mc_form_nonce') 
+add_action( 'wp_ajax_process_potpesa_form', 'process_potpesa_form' );
+add_action( 'wp_ajax_nopriv_process_potpesa_form', 'process_potpesa_form' );
+function process_potpesa_form() {
+  $potpesaonfig = get_option( 'potpesa_options' );
+  if ( ! isset( $_POST['potpesa_form_nonce'] ) || ! wp_verify_nonce( $_POST['potpesa_form_nonce'], 'process_potpesa_form_nonce') 
     ) {
     exit('The form is not valid');
   }
 
   $response = array( 'error' => false );
 
-  if (trim($_POST['mc-phone']) == '') {
+  if (trim($_POST['potpesa-phone']) == '') {
     exit('Phone is required');
   }
 
-    $Amount   = trim( $_POST['mc-amount'] );
-    $phone    = trim( $_POST['mc-phone'] );
+    $Amount   = trim( $_POST['potpesa-amount'] );
+    $phone    = trim( $_POST['potpesa-phone'] );
 
     $PhoneNumber = str_replace( "+", "", $phone );
     $PhoneNumber = preg_replace('/^0/', '254', $phone);
@@ -216,8 +216,8 @@ function potpesa_mpesa_confirm()
 add_action( 'init', 'potpesa_reconcile' );
 function potpesa_reconcile()
 {
-  if ( ! isset( $_GET['mc_ipn_listener'] ) ){ return; }
-  if ( $_GET['mc_ipn_listener'] !== 'reconcile' ){ return; }
+  if ( ! isset( $_GET['potpesa_ipn_listener'] ) ){ return; }
+  if ( $_GET['potpesa_ipn_listener'] !== 'reconcile' ){ return; }
 
   $response = json_decode( file_get_contents( 'php://input' ), true );
   stk_reconcile( 'cb_reconcile', $response );

@@ -9,7 +9,7 @@ jQuery(document).ready(function() {
           var response = "MPesa Error "+data['errorCode']+": "+data['errorMessage']+".";
           var alertcl = "alert-danger";
       } else {
-          var response = "Request <b>"+data['CheckoutRequestID']+"</b> Sent.";
+          var response = "Request <b>"+data['MerchantRequestID']+"</b> Sent.";
           var alertcl = "alert-success";
       }
       
