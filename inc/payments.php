@@ -16,7 +16,7 @@ function potpesa_payment() {
 	$labels = array(
 		'name'                  => _x( 'Pot Payments', 'Post Type General Name', 'potpesa' ),
 		'singular_name'         => _x( 'Pot Payment', 'Post Type Singular Name', 'potpesa' ),
-		'menu_name'             => __( 'Pot Payments', 'potpesa' ),
+		'menu_name'             => __( 'Potpesa', 'potpesa' ),
 		'name_admin_bar'        => __( 'Pot Payment', 'potpesa' ),
 		'archives'              => __( 'Payment Archives', 'potpesa' ),
 		'attributes'            => __( 'Payment Attributes', 'potpesa' ),

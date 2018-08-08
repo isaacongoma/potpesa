@@ -13,15 +13,7 @@
 add_action('admin_menu', 'potpesa_options_page');
 function potpesa_options_page()
 {
-  add_menu_page(
-    'Configure Potpesa',
-    'Configure Potpesa',
-    'manage_options',
-    'potpesa',
-    'potpesa_options_page_html',
-    'dashicons-smiley',
-    20
-  );
+  add_submenu_page('edit.php?post_type=potpesa_payment', __('Configure Potpesa', 'potpesa'), __('Configure', 'potpesa'), 'manage_options', 'potpesa', 'potpesa_options_page_html');
 }
 add_action( 'admin_init', 'potpesa_settings_init' );
 function potpesa_settings_init() {
