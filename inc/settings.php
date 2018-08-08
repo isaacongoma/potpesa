@@ -1,8 +1,13 @@
 <?php
 /**
- * @link              https://mauko.co.ke
- * @since             1.0.0
- * @package           mpesa_donations
+ * @package Potpesa
+ * @subpackage Admin Settings Page
+ * @author Mauko Maunde <mauko@osen.co.ke>
+ * @author Brightone Mwasaru <bmwasaru@gmail.com>
+ * @author Johnes Mecha <jmecha09@gmail.com>
+ * @version 1.8
+ * @since 1.8
+ * @license See LICENSE
  */
 
 add_action('admin_menu', 'potpesa_options_page');
