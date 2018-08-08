@@ -1,10 +1,5 @@
 <?php
-/**
- * @package Potpesa
- * @subpackage Main Plugin File
- * @author Mauko Maunde <mauko@ose.co.ke>, Brightone Mwasaru <bmwasaru@gmail.com>, Johnes Mecha <jmecha09@gmail.com>
- * @version 1.8
- *
+/*
  * Plugin Name: Potpesa
  * Plugin URI: https://swahilipothub.co.ke/
  * Description: This plugin extends WordPress functionality to integrate MPesa for making and receiving online payments.
@@ -16,6 +11,15 @@
  * Tested up to: 4.9.8
  */
  
+/**
+ * @package Potpesa
+ * @subpackage Main Plugin File
+ * @author Mauko Maunde <mauko@osen.co.ke>, Brightone Mwasaru <bmwasaru@gmail.com>, Johnes Mecha <jmecha09@gmail.com>
+ * @version 1.8
+ * @since 1.8
+ * @license See LICENSE
+ */
+
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 define( 'POTPESA_DIR', plugin_dir_path( __FILE__ ) );
 
@@ -73,10 +77,7 @@ stk_config( $potpesaonfig );
 
 add_shortcode('POTPAYER', 'potpesa_form_callback');
 function potpesa_form_callback( $atts = array(), $content = null ) {
-	$potpesaonfig = get_option( 'potpesa_options' );
-	$status = isset( $_SESSION['potpesa_trx_status'] ) ? $potpesaonfig['potpesa_mpesa_conf_msg'].'<br>'.$_SESSION['potpesa_trx_status'] : '';
   return '<form id="potpesa-contribution-form" method="POST" action="" class="potpesa_contribution_form">
-  	<p>'.$status.'</p>
   	<input type="hidden" name="action" value="process_potpesa_form">
     
   	<label for="potpesa-phone">Phone Number</label>

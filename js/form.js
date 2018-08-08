@@ -1,16 +1,19 @@
-$('potpesa-form').submit(){
-  $('loading-animation').show();
-
-  var form = this;
-
-  $.post( form.serialize(), form.attr('action'), data ){
-    if( data['errorMessage'] ){
-       var response = "Error "+ data['errorMessage']+": "+ data['errorMessage']+".";
-    } else {
-       var response = "";
-    }
-       
-    $('loading-animation').hide();
-    $('response-data').html('response');
-  };
-}
+jQuery(document).ready(function() {
+  $('#potpesa-contribution-form').submit(function(e) {
+    e.preventDefault();
+ 
+    var form = $(this);
+    
+    $.post(form.attr('action'), form.serialize(), function(data) {
+      if ( data['errorCode'] ) {
+          var response = "MPesa Error "+data['errorCode']+": "+data['errorMessage']+".";
+          var alertcl = "alert-danger";
+      } else {
+          var response = "Request <b>"+data['CheckoutRequestID']+"</b> Sent.";
+          var alertcl = "alert-success";
+      }
+      
+      $('#potpesa-contribution-form').html( '<div class="alert '+alertcl+' text-center" id="ipn-response" role="alert">'+response+'</div>' );
+    }, 'json');
+  });
+});

@@ -1,4 +1,4 @@
-# potpesa
+# Potpesa
 Integrating Lipa Na Mpesa Online payments into Swahilipot Hub Website(or any other).
 # Prerequisites
 <li>Create an App on the Safaricom Developer Portal.</li>
